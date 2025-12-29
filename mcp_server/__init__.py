@@ -1,0 +1,3 @@
+"""MCP server package for the coding assistant."""
+
+
