@@ -73,9 +73,9 @@ nebius/
 
 ## Installation
 
-**Requirements**
+### Requirements
 - Python 3.11+
-- `uv` or `pip`
+- uv (recommended) or pip
 
 ```bash
 uv sync
@@ -85,9 +85,11 @@ pip install -e .
 
 ## Running the Server
 
+```bash
 python -m mcp_server.main
- *or*
+# or
 uv run python -m mcp_server.main
+```
 
 The server runs over stdio and is compatible with MCP clients.
 
@@ -154,6 +156,7 @@ The tool returns a dictionary with:
 
 ## Using the Error Normalization Tool
 
+### Example Usage
 **Input:**
 ```
 Traceback (most recent call last):
@@ -173,14 +176,6 @@ KeyError: 'missing_key'
 }
 ```
 
-### Complete Workflow Example
-
-1. **Normalize the error** to extract the essential error message
-2. **Search Stack Overflow** using the normalized error and detected language
-3. **Review results** to find solutions
-
-
-
 ## Technologies Used
 
 - **Python 3.11+**: Core programming language
@@ -188,8 +183,3 @@ KeyError: 'missing_key'
 - **httpx**: Async HTTP client for API requests
 - **StackExchange API v2.3**: Stack Overflow search and answer retrieval
 - **uv**: Modern Python package manager (optional, but recommended)
-
-### Dependencies
-
-- `httpx>=0.28.1`: Async HTTP client library
-- `mcp[cli]>=1.25.0`: Model Context Protocol server framework
