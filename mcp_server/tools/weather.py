@@ -9,7 +9,7 @@ logging.basicConfig(level=logging.INFO)
 # Constants - Use a more specific User-Agent
 NWS_API_BASE = "https://api.weather.gov"
 USER_AGENT = "WeatherMCPServer/1.0 (shiristern24@gmail.com)"
-
+CUSTOM_CA_BUNDLE = "C:/Users/shiri/Desktop/my_ca.pem"
 
 async def make_nws_request(url: str) -> dict[str, Any] | None:
     """Make a request to the NWS API with proper error handling."""
@@ -17,7 +17,7 @@ async def make_nws_request(url: str) -> dict[str, Any] | None:
         "User-Agent": USER_AGENT,
         "Accept": "application/geo+json",
     }
-    async with httpx.AsyncClient(verify=False) as client:
+    async with httpx.AsyncClient(verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
         try:
             logging.info("Making request to %s", url)
             response = await client.get(url, headers=headers, timeout=30.0, follow_redirects=True)
@@ -48,7 +48,6 @@ async def make_nws_request(url: str) -> dict[str, Any] | None:
         except Exception as e:  # noqa: BLE001
             logging.error("Unexpected error: %s", str(e))
             return None
-
 
 def format_alert(feature: dict) -> str:
     """Format an alert feature into a readable string."""
@@ -158,5 +157,3 @@ Forecast: {period["detailedForecast"]}
             forecasts.append(forecast)
 
         return "\n---\n".join(forecasts)
-
-

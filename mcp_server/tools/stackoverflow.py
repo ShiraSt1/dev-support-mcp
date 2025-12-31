@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 STACKEXCHANGE_API_BASE = "https://api.stackexchange.com/2.3"
-
+CUSTOM_CA_BUNDLE = "C:/Users/shiri/Desktop/my_ca.pem"
 
 async def _fetch_answer_content(client: httpx.AsyncClient, answer_id: int) -> Dict[str, Any] | None:
     """Fetch the content of a specific answer by its ID."""
@@ -43,7 +43,6 @@ async def _fetch_answer_content(client: httpx.AsyncClient, answer_id: int) -> Di
         logging.error("Unexpected error fetching answer content: %s", str(e))
     return None
 
-
 async def _fetch_first_answer(client: httpx.AsyncClient, question_id: int) -> Dict[str, Any] | None:
     """Fetch the first (highest scored) answer for a question."""
     params = {
@@ -74,7 +73,6 @@ async def _fetch_first_answer(client: httpx.AsyncClient, question_id: int) -> Di
         logging.error("Unexpected error fetching first answer: %s", str(e))
     return None
 
-
 async def _search_stackoverflow_api(full_error: str, limit: int = 3, language: str | None = None) -> List[Dict[str, Any]]:
     """Call the StackExchange (Stack Overflow) search API and return parsed results."""
     params = {
@@ -94,7 +92,7 @@ async def _search_stackoverflow_api(full_error: str, limit: int = 3, language: s
     logging.info("Search query: %s", full_error[:100] + "..." if len(full_error) > 100 else full_error)
     logging.info("Making request to %s", url)
 
-    async with httpx.AsyncClient(timeout=15.0, verify=False) as client:
+    async with httpx.AsyncClient(timeout=15.0, verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
         response = await client.get(url, params=params)
         logging.info("Response status: %s", response.status_code)
         response.raise_for_status()
@@ -175,7 +173,6 @@ async def _search_stackoverflow_api(full_error: str, limit: int = 3, language: s
     logging.info("Step 3: Completed processing all results. Returning %d results", len(results))
     return results
 
-
 def _build_short_explanation(full_error: str) -> str:
     """Create a short, high-level explanation from the error text."""
     if not full_error:
@@ -187,7 +184,6 @@ def _build_short_explanation(full_error: str) -> str:
         first_line = first_line[:217].rstrip() + "..."
 
     return f"A search was performed on Stack Overflow using this error: \"{first_line}\"."
-
 
 def register_stackoverflow_tool(mcp: FastMCP) -> None:
     """Register the search_stackoverflow tool on the given FastMCP server.
@@ -241,7 +237,6 @@ def register_stackoverflow_tool(mcp: FastMCP) -> None:
             "short_explanation": _build_short_explanation(full_error),
             "results": results,
         }
-
 
 def _normalize_error_string(raw_error: str) -> str:
     """Normalize and clean a raw error string by removing file paths, line numbers, timestamps, and noise."""
@@ -336,7 +331,6 @@ def _normalize_error_string(raw_error: str) -> str:
     
     return normalized
 
-
 def _extract_error_signature(normalized_error: str) -> str | None:
     """Extract the main exception/error type from the normalized error string."""
     logging.info("Step: Extracting error signature")
@@ -374,7 +368,6 @@ def _extract_error_signature(normalized_error: str) -> str | None:
     
     logging.info("No error signature found")
     return None
-
 
 def _detect_language(normalized_error: str) -> str | None:
     """Trivially detect the programming language from error patterns."""
@@ -433,7 +426,6 @@ def _detect_language(normalized_error: str) -> str | None:
     logging.info("No language detected")
     return None
 
-
 def register_normalize_error_tool(mcp: FastMCP) -> None:
     """Register the normalize_error tool on the given FastMCP server."""
 
@@ -467,5 +459,3 @@ def register_normalize_error_tool(mcp: FastMCP) -> None:
             "error_signature": error_signature,
             "detected_language": detected_language,
         }
-
-

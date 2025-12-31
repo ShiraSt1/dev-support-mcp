@@ -3,6 +3,8 @@
 Nebius is a local **Model Context Protocol (MCP)** server written in Python, designed to help developers diagnose and understand programming errors.  
 The server exposes multiple MCP tools, including Stack Overflow–based error analysis and a small weather API integration.
 
+All MCP tools were tested both with Claude and the MCP Inspector to ensure
+correct tool registration, argument validation, and consistent JSON-RPC responses.
 
 ## Project Overview
 
@@ -151,8 +153,6 @@ The tool returns a dictionary with:
     ]
 }
 ```
-
-
 
 ## Using the Error Normalization Tool
 
