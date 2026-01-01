@@ -183,3 +183,22 @@ KeyError: 'missing_key'
 - **httpx**: Async HTTP client for API requests
 - **StackExchange API v2.3**: Stack Overflow search and answer retrieval
 - **uv**: Modern Python package manager (optional, but recommended)
+
+## Environment Variables
+
+This project uses environment variables for environment-specific configuration.
+
+Create a `.env` file in the project root with the following variables:
+
+- `CUSTOM_CA_BUNDLE`  
+  Path to a custom CA bundle file, required in environments with HTTPS inspection (e.g. corporate proxy, NetSpark).
+
+- `STACKEXCHANGE_API_BASE`  
+  Base URL for the Stack Exchange API.  
+  Default: `https://api.stackexchange.com/2.3`
+
+- `NWS_API_BASE`
+  Base URL for the U.S. National Weather Service (NWS) API used by the weather tools.
+  
+- `USER_AGENT`
+  User-Agent header used for NWS API requests.
