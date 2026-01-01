@@ -90,7 +90,7 @@ pip install -e .
 ```bash
 python -m mcp_server.main
 # or
-uv run python -m mcp_server.main
+uv run -m mcp_server.main
 ```
 
 The server runs over stdio and is compatible with MCP clients.
@@ -100,6 +100,8 @@ The server runs over stdio and is compatible with MCP clients.
 To use this server with an MCP client (such as Claude Desktop or other MCP-compatible tools), configure the client to run:
 ```
 python -m mcp_server.main
+# or
+uv run -m mcp_server.main
 ```
 
 The client will communicate with the server via stdio, sending tool call requests and receiving structured responses.
@@ -199,6 +201,6 @@ Create a `.env` file in the project root with the following variables:
 
 - `NWS_API_BASE`
   Base URL for the U.S. National Weather Service (NWS) API used by the weather tools.
-  
+
 - `USER_AGENT`
   User-Agent header used for NWS API requests.
