@@ -1,22 +1,20 @@
 from typing import Any
 import httpx
 import logging
+import os
 
 from mcp.server.fastmcp import FastMCP
 
 logging.basicConfig(level=logging.INFO)
 
-# Constants - Use a more specific User-Agent
-NWS_API_BASE = "https://api.weather.gov"
-USER_AGENT = "WeatherMCPServer/1.0 (shiristern24@gmail.com)"
-CUSTOM_CA_BUNDLE = "C:/Users/shiri/Desktop/my_ca.pem"
-
 async def make_nws_request(url: str) -> dict[str, Any] | None:
     """Make a request to the NWS API with proper error handling."""
+    USER_AGENT = os.getenv("USER_AGENT")
     headers = {
         "User-Agent": USER_AGENT,
         "Accept": "application/geo+json",
     }
+    CUSTOM_CA_BUNDLE = os.getenv("CUSTOM_CA_BUNDLE")
     async with httpx.AsyncClient(verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
         try:
             logging.info("Making request to %s", url)
@@ -79,6 +77,7 @@ def register_weather_tools(mcp: FastMCP) -> None:
         Args:
             state: Two-letter US state code (e.g. CA, NY)
         """
+        NWS_API_BASE = os.getenv("NWS_API_BASE")
         url = f"{NWS_API_BASE}/alerts/active/area/{state}"
         data = await make_nws_request(url)
 
@@ -109,6 +108,7 @@ def register_weather_tools(mcp: FastMCP) -> None:
         # First get the forecast grid endpoint
         latitude = round(latitude, 4)
         longitude = round(longitude, 4)
+        NWS_API_BASE = os.getenv("NWS_API_BASE")
         points_url = f"{NWS_API_BASE}/points/{latitude},{longitude}"
         logging.info("Step 1: Getting grid points for  %s, %s", latitude, longitude)
         points_data = await make_nws_request(points_url)

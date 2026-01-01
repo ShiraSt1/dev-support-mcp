@@ -10,8 +10,7 @@ from mcp.server.fastmcp import FastMCP
 import logging
 logging.basicConfig(level=logging.INFO)
 
-STACKEXCHANGE_API_BASE = "https://api.stackexchange.com/2.3"
-CUSTOM_CA_BUNDLE = "C:/Users/shiri/Desktop/my_ca.pem"
+import os
 
 async def _fetch_answer_content(client: httpx.AsyncClient, answer_id: int) -> Dict[str, Any] | None:
     """Fetch the content of a specific answer by its ID."""
@@ -21,8 +20,8 @@ async def _fetch_answer_content(client: httpx.AsyncClient, answer_id: int) -> Di
         "site": "stackoverflow",
         "filter": "withbody",  # Include answer body in response
     }
-    
-    url = f"{STACKEXCHANGE_API_BASE}/answers/{answer_id}"
+    api_key = os.getenv("STACKEXCHANGE_API_BASE")
+    url = f"{api_key}/answers/{answer_id}"
     logging.info("Step: Fetching answer content for answer_id=%s", answer_id)
     logging.info("Making request to %s", url)
     
@@ -51,8 +50,8 @@ async def _fetch_first_answer(client: httpx.AsyncClient, question_id: int) -> Di
         "site": "stackoverflow",
         "filter": "withbody",  # Include answer body in response
     }
-    
-    url = f"{STACKEXCHANGE_API_BASE}/questions/{question_id}/answers"
+    api_key = os.getenv("STACKEXCHANGE_API_BASE")
+    url = f"{api_key}/questions/{question_id}/answers"
     logging.info("Step: Fetching first answer for question_id=%s", question_id)
     logging.info("Making request to %s", url)
     
@@ -87,11 +86,13 @@ async def _search_stackoverflow_api(full_error: str, limit: int = 3, language: s
         params["tagged"] = language
         logging.info("Adding language tag: %s", language)
         
-    url = f"{STACKEXCHANGE_API_BASE}/search/advanced"
+    api_key = os.getenv("STACKEXCHANGE_API_BASE")
+    url = f"{api_key}/search/advanced"
     logging.info("Step 1: Searching Stack Overflow API")
     logging.info("Search query: %s", full_error[:100] + "..." if len(full_error) > 100 else full_error)
     logging.info("Making request to %s", url)
 
+    CUSTOM_CA_BUNDLE = os.getenv("CUSTOM_CA_BUNDLE")
     async with httpx.AsyncClient(timeout=15.0, verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
         response = await client.get(url, params=params)
         logging.info("Response status: %s", response.status_code)
@@ -444,6 +445,7 @@ def register_normalize_error_tool(mcp: FastMCP) -> None:
         Args:
             raw_error: The full raw error message or stack trace text to normalize.
         """
+
         logging.info("Tool called: normalize_error")
         logging.info("Raw error length: %d characters", len(raw_error))
         
