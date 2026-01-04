@@ -14,8 +14,10 @@ async def make_nws_request(url: str) -> dict[str, Any] | None:
         "User-Agent": USER_AGENT,
         "Accept": "application/geo+json",
     }
-    CUSTOM_CA_BUNDLE = os.getenv("CUSTOM_CA_BUNDLE")
-    async with httpx.AsyncClient(verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
+    # If running behind a protected/filtered network (e.g. corporate firewall), use the commented line with CUSTOM_CA_BUNDLE.
+    # CUSTOM_CA_BUNDLE = os.getenv("CUSTOM_CA_BUNDLE")
+    # async with httpx.AsyncClient(verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
+    async with httpx.AsyncClient(trust_env=False) as client:
         try:
             logging.info("Making request to %s", url)
             response = await client.get(url, headers=headers, timeout=30.0, follow_redirects=True)

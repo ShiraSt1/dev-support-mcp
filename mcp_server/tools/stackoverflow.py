@@ -92,8 +92,10 @@ async def _search_stackoverflow_api(full_error: str, limit: int = 3, language: s
     logging.info("Search query: %s", full_error[:100] + "..." if len(full_error) > 100 else full_error)
     logging.info("Making request to %s", url)
 
-    CUSTOM_CA_BUNDLE = os.getenv("CUSTOM_CA_BUNDLE")
-    async with httpx.AsyncClient(timeout=15.0, verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
+    # If running behind a protected/filtered network (e.g. corporate firewall), use the commented line with CUSTOM_CA_BUNDLE.
+    # CUSTOM_CA_BUNDLE = os.getenv("CUSTOM_CA_BUNDLE")
+    # async with httpx.AsyncClient(timeout=15.0, verify=CUSTOM_CA_BUNDLE, trust_env=False) as client:
+    async with httpx.AsyncClient(timeout=15.0, trust_env=False) as client:
         response = await client.get(url, params=params)
         logging.info("Response status: %s", response.status_code)
         response.raise_for_status()
