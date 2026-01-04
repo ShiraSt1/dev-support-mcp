@@ -1,6 +1,6 @@
-# Nebius - MCP Server for Developer Support
+# Dev-Support-MCP - MCP Server for Developer Support
 
-Nebius is a local **Model Context Protocol (MCP)** server written in Python, designed to help developers diagnose and understand programming errors.  
+Dev-Support-MCP is a local **Model Context Protocol (MCP)** server written in Python, designed to help developers diagnose and understand programming errors.  
 The server exposes multiple MCP tools, including Stack Overflow–based error analysis.
 
 All MCP tools were tested both with Claude and the MCP Inspector to ensure
@@ -8,7 +8,7 @@ correct tool registration, argument validation, and consistent JSON-RPC response
 
 ## Project Overview
 
-Nebius assists developers by:
+Dev-Support-MCP assists developers by:
 - Cleaning and normalizing raw error messages
 - Detecting error types and programming languages
 - Searching Stack Overflow for relevant questions
@@ -37,7 +37,7 @@ The project demonstrates how to build reliable, extensible MCP servers that inte
 ## Project Structure
 
 ```
-nebius/
+Dev-Support-MCP/
 ├── mcp_server/
 │   ├── __init__.py          # Package initialization
 │   ├── server.py            # FastMCP server instance creation
