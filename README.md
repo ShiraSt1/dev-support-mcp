@@ -1,7 +1,7 @@
 # Nebius - MCP Server for Developer Support
 
 Nebius is a local **Model Context Protocol (MCP)** server written in Python, designed to help developers diagnose and understand programming errors.  
-The server exposes multiple MCP tools, including Stack Overflow–based error analysis and a small weather API integration.
+The server exposes multiple MCP tools, including Stack Overflow–based error analysis.
 
 All MCP tools were tested both with Claude and the MCP Inspector to ensure
 correct tool registration, argument validation, and consistent JSON-RPC responses.
@@ -34,14 +34,6 @@ The project demonstrates how to build reliable, extensible MCP servers that inte
 - **Error Signature Extraction**: Identifies the main exception/error type from normalized errors
 - **Language Detection**: Automatically detects programming languages from error patterns (Python, JavaScript, Java, C/C++)
 
-### Weather MCP Tools (NOAA / NWS)
-A secondary MCP module based on the official **NOAA / National Weather Service API**, included as a reference for external API integration.
-
-Available tools:
-- `nws_active_alerts` – Active weather alerts for a US state
-- `nws_precise_forecast` – Short-term weather forecast by latitude and longitude
-
-
 ## Project Structure
 
 ```
@@ -52,8 +44,7 @@ nebius/
 │   ├── main.py              # Entry point - registers tools and runs server
 │   └── tools/
 │       ├── __init__.py      # Tools package initialization
-│       ├── stackoverflow.py # Stack Overflow search and error normalization tools
-│       └── weather.py       # Weather API tools (NWS integration)
+│       └── stackoverflow.py # Stack Overflow search and error normalization tools
 ├── pyproject.toml           # Project configuration and dependencies
 ├── uv.lock                  # Dependency lock file
 └── README.md                # This file
@@ -68,10 +59,6 @@ nebius/
 - **`mcp_server/tools/stackoverflow.py`**: Contains two main tools:
   - `search_stackoverflow`: Searches Stack Overflow API and returns relevant questions with answers
   - `normalize_error`: Normalizes error messages and extracts error signatures and language information
-
-- **`mcp_server/tools/weather.py`**: Contains weather-related tools (secondary features):
-  - `nws_active_alerts`: Gets active weather alerts for US states
-  - `nws_precise_forecast`: Gets weather forecasts for US locations
 
 ## Installation
 
@@ -195,12 +182,6 @@ Create a `.env` file in the project root with the following variables:
 - `STACKEXCHANGE_API_BASE`  
   Base URL for the Stack Exchange API.  
   Default: `https://api.stackexchange.com/2.3`
-
-- `NWS_API_BASE`
-  Base URL for the U.S. National Weather Service (NWS) API used by the weather tools.
-
-- `USER_AGENT`
-  User-Agent header used for NWS API requests.
 
 - `CUSTOM_CA_BUNDLE`  
   **Optional.** Path to a custom CA bundle file.  
